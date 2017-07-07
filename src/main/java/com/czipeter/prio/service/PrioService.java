@@ -32,12 +32,8 @@ public class PrioService {
     int startingSequence = (current == 0) ? taskRepository.findAllByOrderBySequence().size() : current;
     model.addAttribute("firstone",
             taskRepository.findOneBySequence(startingSequence));
-    System.out.println("The first task is: "
-            + taskRepository.findOneBySequence(startingSequence).getDescription());
     model.addAttribute("secondone",
             taskRepository.findOneBySequence(startingSequence - 1));
-    System.out.println("The second task is: "
-            + taskRepository.findOneBySequence(startingSequence - 1).getDescription());
     model.addAttribute("ordered", ordered);
     return "prioritize";
   }
@@ -49,11 +45,11 @@ public class PrioService {
     swapPlaces(moreImportantTask, lessImportantTask);
 
     if (moreImportantTask.getSequence() == ordered + 1) {
-      if (ordered == (int) taskRepository.count() - 1) {
+      if (ordered >= (int) taskRepository.count() - 2) {
         model.addAttribute("done", true);
         return REDIRECT_TO_INDEX;
       }
-      return "redirect:/?prioritize=" + (ordered + 1) + "&current=" + taskRepository.count();
+      return "redirect:/prioritize?ordered=" + (ordered + 1) + "&current=" + taskRepository.findAllByOrderBySequence().size();
     }
     return "redirect:/prioritize?ordered=" + ordered + "&current=" + moreImportantTask.getSequence();
   }
