@@ -79,6 +79,14 @@ public class PrioService {
   }
 
   public String deleteTask(Model model, int id) {
+    Task toDelete = taskRepository.findOneById(id);
+    for (Task examinedTask :
+            taskRepository.findAllByOrderBySequence()) {
+      if (examinedTask.getSequence() > toDelete.getSequence()) {
+        examinedTask.setSequence(examinedTask.getSequence() - 1);
+      }
+    }
+    PrioService.setTaskCounter(PrioService.getTaskCounter() - 1);
     taskRepository.delete(id);
     model.addAttribute("mealRepo", taskRepository.findAllByOrderBySequence());
     return REDIRECT_TO_INDEX;
