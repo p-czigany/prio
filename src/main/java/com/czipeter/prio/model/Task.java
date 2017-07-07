@@ -1,5 +1,6 @@
 package com.czipeter.prio.model;
 
+import com.czipeter.prio.service.PrioService;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,17 +11,26 @@ public class Task {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+  private int id;
+
   private String description;
+
+  private int sequence;
 
   public Task() {
   }
 
-  public long getId() {
+  public Task(String description) {
+    this.description = description;
+    PrioService.setTaskCounter(PrioService.getTaskCounter() + 1);
+    sequence = PrioService.getTaskCounter();
+  }
+
+  public int getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -30,5 +40,13 @@ public class Task {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public int getSequence() {
+    return sequence;
+  }
+
+  public void setSequence(int sequence) {
+    this.sequence = sequence;
   }
 }
